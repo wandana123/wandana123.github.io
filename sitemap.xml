@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://wandana123.github.io/2024/06/05/NGINX%E6%90%AD%E5%BB%BA%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</loc>
+    
+    <lastmod>2024-06-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/</loc>
+    
+    <lastmod>2024-05-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://wandana123.github.io/</loc>
+    <lastmod>2024-06-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://wandana123.github.io/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/</loc>
+    <lastmod>2024-06-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+</urlset>

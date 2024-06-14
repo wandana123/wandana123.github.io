@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://wandana123.github.io</id>
+    <title>全栈技术</title>
+    <link href="https://wandana123.github.io" />
+    <updated>2024-06-05T03:05:00.000Z</updated>
+    <category term="中间件" />
+    <entry>
+        <id>https://wandana123.github.io/2024/06/05/NGINX%E6%90%AD%E5%BB%BA%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</id>
+        <title>NGINX搭建负载均衡</title>
+        <link rel="alternate" href="https://wandana123.github.io/2024/06/05/NGINX%E6%90%AD%E5%BB%BA%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"/>
+        <content type="html">&lt;p&gt;#user  nobody;&lt;br&gt;
+worker_processes  1;&lt;/p&gt;
+&lt;p&gt;#error_log  logs/error.log;&lt;br&gt;
+#error_log  logs/error.log  notice;&lt;br&gt;
+#error_log  logs/error.log  info;&lt;/p&gt;
+&lt;p&gt;#pid        logs/nginx.pid;&lt;/p&gt;
+&lt;p&gt;events {&lt;br&gt;
+worker_connections  1024;&lt;br&gt;
+}&lt;/p&gt;
+&lt;p&gt;http {&lt;br&gt;
+include       mime.types;&lt;br&gt;
+default_type  application/octet-stream;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;map $http_upgrade $connection_upgrade &amp;#123;
+	default upgrade;
+	&#39;&#39; close;
+   &amp;#125;
+   
+#log_format  main  &#39;$remote_addr - $remote_user [$time_local] &amp;quot;$request&amp;quot; &#39;
+#                  &#39;$status $body_bytes_sent &amp;quot;$http_referer&amp;quot; &#39;
+#                  &#39;&amp;quot;$http_user_agent&amp;quot; &amp;quot;$http_x_forwarded_for&amp;quot;&#39;;
+
+#access_log  logs/access.log  main;
+
+#上传文件最大限制
+client_max_body_size 500M;
+
+sendfile        on;
+#tcp_nopush     on;
+
+#keepalive_timeout  0;
+keepalive_timeout  65;
+
+types_hash_max_size 2048;
+server_names_hash_max_size 2048;
+types_hash_bucket_size 1024;
+
+#gzip  on;
+
+
+upstream websocket &amp;#123;
+		ip_hash;
+		server ip:port;
+		server ip:port;
+		
+    &amp;#125;
+	
+    server &amp;#123;
+		listen     80;
+		server_name www.baidu.com;
+		
+		
+		location / &amp;#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DW permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin &#39;&#39;;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
+
+
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+
+		&amp;#125;
+
+	&amp;#125;
+	
+	server &amp;#123;
+		listen     80;
+		server_name www.qq.com;
+		
+		
+		location / &amp;#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DWeb/dw/index.html permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin &#39;&#39;;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
+
+
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+
+		&amp;#125;
+	&amp;#125;	
+&amp;#125;
+
+
+#server &amp;#123;
+    #listen       80;
+    #server_name  localhost;
+
+    #charset koi8-r;
+
+    #access_log  logs/host.access.log  main;
+
+    #location / &amp;#123;
+    #    root   html;
+    #    index  index.html index.htm;
+    #&amp;#125;
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    #error_page   500 502 503 504  /50x.html;
+    #location = /50x.html &amp;#123;
+    #  root   html;
+    #&amp;#125;
+
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ &amp;#123;
+    #    proxy_pass   http://127.0.0.1;
+    #&amp;#125;
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ &amp;#123;
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #&amp;#125;
+
+    # deny access to .htaccess files, if Apache&#39;s document root
+    # concurs with nginx&#39;s one
+    #
+    #location ~ /\.ht &amp;#123;
+    #    deny  all;
+    #&amp;#125;
+#&amp;#125;
+
+
+# another virtual host using mix of IP-, name-, and port-based configuration
+#
+#server &amp;#123;
+#    listen       8000;
+#    listen       somename:8080;
+#    server_name  somename  alias  another.alias;
+
+#    location / &amp;#123;
+#        root   html;
+#        index  index.html index.htm;
+#    &amp;#125;
+#&amp;#125;
+
+
+# HTTPS server
+#
+#server &amp;#123;
+#    listen       443 ssl;
+#    server_name  localhost;
+
+#    ssl_certificate      cert.pem;
+#    ssl_certificate_key  cert.key;
+
+#    ssl_session_cache    shared:SSL:1m;
+#    ssl_session_timeout  5m;
+
+#    ssl_ciphers  HIGH:!aNULL:!MD5;
+#    ssl_prefer_server_ciphers  on;
+
+#    location / &amp;#123;
+#        root   html;
+#        index  index.html index.htm;
+#    &amp;#125;
+#&amp;#125;&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <updated>2024-06-05T03:05:00.000Z</updated>
+    </entry>
+    <entry>
+        <id>https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/</id>
+        <title>东方通（TongWeb）定时自动重启任务</title>
+        <link rel="alternate" href="https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/"/>
+        <content type="html">&lt;p&gt;#首先执行 &lt;code&gt;crontab -e&lt;/code&gt;  进入定时任务内&lt;br&gt;
+ #然后将下面的任务复制粘贴进去，wq! 保存退出&lt;br&gt;
+ #重启 crontab 任务即可&lt;/p&gt;
+&lt;p&gt;#每天早晨 5:00 停机&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;00 05 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;#每天早晨 5:04 启动&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;04 05 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;#每天中午 13:00 停机&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;00 13 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;#每天中午 13:04 重启&lt;br&gt;
+ 04 13 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/dingshirenwu.png&#34; alt=&#34;crontab格式说明&#34;&gt;&lt;/p&gt;
+&lt;p&gt;太高级了，简直简单的不要不要的！！！！！！！&lt;/p&gt;
+&lt;p&gt;又搞定了一个大事儿。&lt;/p&gt;
+</content>
+        <category term="中间件" />
+        <updated>2024-05-08T09:34:56.000Z</updated>
+    </entry>
+</feed>
