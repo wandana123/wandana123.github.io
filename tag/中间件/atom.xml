@@ -6,24 +6,22 @@
     <updated>2024-05-08T09:34:56.000Z</updated>
     <category term="WINDOWS" />
     <category term="中间件" />
+    <category term="数据库" />
     <entry>
         <id>https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/</id>
         <title>东方通（TongWeb）定时自动重启任务</title>
         <link rel="alternate" href="https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/"/>
-        <content type="html">&lt;p&gt;#首先执行 &lt;code&gt;crontab -e&lt;/code&gt;  进入定时任务内&lt;br&gt;
- #然后将下面的任务复制粘贴进去，wq! 保存退出&lt;br&gt;
- #重启 crontab 任务即可&lt;/p&gt;
-&lt;p&gt;#每天早晨 5:00 停机&lt;/p&gt;
+        <content type="html">&lt;p&gt;#首先执行&lt;code&gt;crontab -e&lt;/code&gt;进入定时任务内&lt;br&gt;#然后将下面的任务复制粘贴进去，wq!保存退出&lt;br&gt;#重启crontab任务即可&lt;/p&gt;
+&lt;p&gt;#每天早晨5:00停机&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;00 05 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天早晨 5:04 启动&lt;/p&gt;
+&lt;p&gt;#每天早晨5:04启动&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;04 05 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天中午 13:00 停机&lt;/p&gt;
+&lt;p&gt;#每天中午13:00停机&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;00 13 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天中午 13:04 重启&lt;br&gt;
- 04 13 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh&lt;/p&gt;
+&lt;p&gt;#每天中午13:04重启&lt;br&gt;    04 13 * * * cd &amp;#x2F;opt&amp;#x2F;TongWeb7.0&amp;#x2F;bin;.&amp;#x2F;startservernohup.sh&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/dingshirenwu.png&#34; alt=&#34;crontab格式说明&#34;&gt;&lt;/p&gt;
 &lt;p&gt;太高级了，简直简单的不要不要的！！！！！！！&lt;/p&gt;
 &lt;p&gt;又搞定了一个大事儿。&lt;/p&gt;

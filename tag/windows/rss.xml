@@ -9,25 +9,24 @@
         <lastBuildDate>Thu, 13 Jun 2024 14:52:31 +0800</lastBuildDate>
         <category>WINDOWS</category>
         <category>中间件</category>
+        <category>数据库</category>
         <item>
             <guid isPermalink="true">https://wandana123.github.io/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</guid>
             <title>WIN10&amp;&amp;WIN11组策略无法打开的问题处理</title>
             <link>https://wandana123.github.io/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</link>
             <category>WINDOWS</category>
             <pubDate>Thu, 13 Jun 2024 14:52:31 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;问题描述：&lt;br&gt;
-win + R 运行框内 gpedit.msc 调不起来组策略。&lt;/p&gt;
-&lt;p&gt;解决方案：&lt;br&gt;
-1. 随便哪个位置，新建一个 txt 文档，粘贴如下内容。&lt;/p&gt;
+            <description><![CDATA[ &lt;p&gt;问题描述：&lt;br&gt;    win + R运行框内gpedit.msc调不起来组策略。&lt;/p&gt;
+&lt;p&gt;解决方案：&lt;br&gt;1.随便哪个位置，新建一个txt文档，粘贴如下内容。&lt;/p&gt;
 &lt;p&gt;@echo off&lt;/p&gt;
 &lt;p&gt;pushd “%~dp0”&lt;/p&gt;
-&lt;p&gt;dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &amp;gt;List.txt&lt;/p&gt;
-&lt;p&gt;dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &amp;gt;&amp;gt;List.txt&lt;/p&gt;
-&lt;p&gt;for /f %%i in (‘findstr /i . List.txt 2^&amp;gt;nul’) do dism /online /norestart /add-package:“C:\Windows\servicing\Packages%%i”&lt;/p&gt;
+&lt;p&gt;dir &amp;#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &amp;gt;List.txt&lt;/p&gt;
+&lt;p&gt;dir &amp;#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &amp;gt;&amp;gt;List.txt&lt;/p&gt;
+&lt;p&gt;for &amp;#x2F;f %%i in (‘findstr &amp;#x2F;i . List.txt 2^&amp;gt;nul’) do dism &amp;#x2F;online &amp;#x2F;norestart &amp;#x2F;add-package:”C:\Windows\servicing\Packages%%i”&lt;/p&gt;
 &lt;p&gt;pause&lt;/p&gt;
-&lt;p&gt;2. 另存为 XXX.cmd&lt;/p&gt;
-&lt;p&gt;3. 文件名随便就行。然后以管理员权限运行。&lt;/p&gt;
-&lt;p&gt;最后跑完内容后，再 win + R 运行框内 gpedit.msc 就可以了。&lt;/p&gt;
+&lt;p&gt;2.另存为XXX.cmd&lt;/p&gt;
+&lt;p&gt;3.文件名随便就行。然后以管理员权限运行。&lt;/p&gt;
+&lt;p&gt;最后跑完内容后，再win + R运行框内gpedit.msc就可以了。&lt;/p&gt;
  ]]></description>
         </item>
     </channel>

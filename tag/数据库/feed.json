@@ -1,0 +1,18 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "全栈技术 • All posts by \"数据库\" tag",
+    "description": "",
+    "home_page_url": "https://wandana123.github.io",
+    "items": [
+        {
+            "id": "https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/",
+            "url": "https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/",
+            "title": "神通数据库查询某个模式下所有表的大小",
+            "date_published": "2024-06-26T02:53:38.000Z",
+            "content_html": "<p>业务场景：<br>    有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。</p>\n<pre><code>下面是具体sql。\n</code></pre>\n<p><code>SELECT TMP.NSPNAME AS &quot;Sechma&quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &quot;Size(M)&quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&#39;SYSDBA&#39;) and TMP.RELKIND =&#39;r&#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;</code></p>\n<h1 id=\"搞定，收工！！！\"><a href=\"#搞定，收工！！！\" class=\"headerlink\" title=\"搞定，收工！！！\"></a>搞定，收工！！！</h1><h1 id=\"打卡，下班！！！\"><a href=\"#打卡，下班！！！\" class=\"headerlink\" title=\"打卡，下班！！！\"></a>打卡，下班！！！</h1>",
+            "tags": [
+                "数据库"
+            ]
+        }
+    ]
+}

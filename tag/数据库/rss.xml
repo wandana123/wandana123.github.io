@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>全栈技术 • Posts by &#34;数据库&#34; tag</title>
+        <link>https://wandana123.github.io</link>
+        <description></description>
+        <language>en</language>
+        <pubDate>Wed, 26 Jun 2024 10:53:38 +0800</pubDate>
+        <lastBuildDate>Wed, 26 Jun 2024 10:53:38 +0800</lastBuildDate>
+        <category>WINDOWS</category>
+        <category>中间件</category>
+        <category>数据库</category>
+        <item>
+            <guid isPermalink="true">https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/</guid>
+            <title>神通数据库查询某个模式下所有表的大小</title>
+            <link>https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/</link>
+            <category>数据库</category>
+            <pubDate>Wed, 26 Jun 2024 10:53:38 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;业务场景：&lt;br&gt;    有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;下面是具体sql。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;SELECT TMP.NSPNAME AS &amp;quot;Sechma&amp;quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &amp;quot;Size(M)&amp;quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&amp;#39;SYSDBA&amp;#39;) and TMP.RELKIND =&amp;#39;r&amp;#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;&lt;/code&gt;&lt;/p&gt;
+&lt;h1 id=&#34;搞定，收工！！！&#34;&gt;&lt;a href=&#34;#搞定，收工！！！&#34; class=&#34;headerlink&#34; title=&#34;搞定，收工！！！&#34;&gt;&lt;/a&gt;搞定，收工！！！&lt;/h1&gt;&lt;h1 id=&#34;打卡，下班！！！&#34;&gt;&lt;a href=&#34;#打卡，下班！！！&#34; class=&#34;headerlink&#34; title=&#34;打卡，下班！！！&#34;&gt;&lt;/a&gt;打卡，下班！！！&lt;/h1&gt; ]]></description>
+        </item>
+    </channel>
+</rss>
