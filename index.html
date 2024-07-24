@@ -29,34 +29,46 @@
       switchTab();
       window.addEventListener('hashchange', switchTab, false);
   })();
-  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="全栈技术" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">主页</a><a class="navbar-item" href="/archives">文章</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-26T02:53:38.000Z" title="2024/6/26 10:53:38">2024-06-26</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-26T02:58:04.953Z" title="2024/6/26 10:58:04">2024-06-26</time></span><span class="level-item">a minute read (About 168 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/">神通数据库查询某个模式下所有表的大小</a></p><div class="content"><p>业务场景：<br>    有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。</p>
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="全栈技术" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">主页</a><a class="navbar-item" href="/archives">文章</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-26T02:53:38.000Z" title="2024/6/26 10:53:38">2024-06-26</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-26T02:58:04.953Z" title="2024/6/26 10:58:04">2024-06-26</time></span><span class="level-item">a minute read (About 168 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/">神通数据库查询某个模式下所有表的大小</a></p><div class="content"><p>业务场景：<br>
+有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。</p>
 <pre><code>下面是具体sql。
 </code></pre>
-<p><code>SELECT TMP.NSPNAME AS &quot;Sechma&quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &quot;Size(M)&quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&#39;SYSDBA&#39;) and TMP.RELKIND =&#39;r&#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;</code></p>
-<h1 id="搞定，收工！！！"><a href="#搞定，收工！！！" class="headerlink" title="搞定，收工！！！"></a>搞定，收工！！！</h1><h1 id="打卡，下班！！！"><a href="#打卡，下班！！！" class="headerlink" title="打卡，下班！！！"></a>打卡，下班！！！</h1></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-13T06:52:31.000Z" title="2024/6/13 14:52:31">2024-06-13</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-14T09:58:42.029Z" title="2024/6/14 17:58:42">2024-06-14</time></span><span class="level-item">a minute read (About 147 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/">WIN10&amp;&amp;WIN11组策略无法打开的问题处理</a></p><div class="content"><p>问题描述：<br>    win + R运行框内gpedit.msc调不起来组策略。</p>
-<p>解决方案：<br>1.随便哪个位置，新建一个txt文档，粘贴如下内容。</p>
+<p><code>SELECT TMP.NSPNAME AS &quot;Sechma&quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &quot;Size(M)&quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME='SYSDBA') and TMP.RELKIND ='r'  GROUP BY TMP.NSPNAME, TMP.RELNAME;</code></p>
+<h1 id="搞定收工"><a class="markdownIt-Anchor" href="#搞定收工">#</a> 搞定，收工！！！</h1>
+<h1 id="打卡下班"><a class="markdownIt-Anchor" href="#打卡下班">#</a> 打卡，下班！！！</h1>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-13T06:52:31.000Z" title="2024/6/13 14:52:31">2024-06-13</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-14T09:58:42.029Z" title="2024/6/14 17:58:42">2024-06-14</time></span><span class="level-item">a minute read (About 147 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/">WIN10&amp;&amp;WIN11组策略无法打开的问题处理</a></p><div class="content"><p>问题描述：<br>
+win + R 运行框内 gpedit.msc 调不起来组策略。</p>
+<p>解决方案：<br>
+1. 随便哪个位置，新建一个 txt 文档，粘贴如下内容。</p>
 <p>@echo off</p>
 <p>pushd “%~dp0”</p>
-<p>dir &#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &gt;List.txt</p>
-<p>dir &#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &gt;&gt;List.txt</p>
-<p>for &#x2F;f %%i in (‘findstr &#x2F;i . List.txt 2^&gt;nul’) do dism &#x2F;online &#x2F;norestart &#x2F;add-package:”C:\Windows\servicing\Packages%%i”</p>
+<p>dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &gt;List.txt</p>
+<p>dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &gt;&gt;List.txt</p>
+<p>for /f %%i in (‘findstr /i . List.txt 2^&gt;nul’) do dism /online /norestart /add-package:“C:\Windows\servicing\Packages%%i”</p>
 <p>pause</p>
-<p>2.另存为XXX.cmd</p>
-<p>3.文件名随便就行。然后以管理员权限运行。</p>
-<p>最后跑完内容后，再win + R运行框内gpedit.msc就可以了。</p>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-05T03:05:00.000Z" title="2024/6/5 11:05:00">2024-06-05</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-05T03:06:01.160Z" title="2024/6/5 11:06:01">2024-06-05</time></span><span class="level-item">4 minutes read (About 584 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/05/NGINX%E6%90%AD%E5%BB%BA%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">NGINX搭建负载均衡</a></p><div class="content"><p>#user  nobody;<br>worker_processes  1;</p>
-<p>#error_log  logs&#x2F;error.log;<br>#error_log  logs&#x2F;error.log  notice;<br>#error_log  logs&#x2F;error.log  info;</p>
-<p>#pid        logs&#x2F;nginx.pid;</p>
-<p>events {<br>    worker_connections  1024;<br>}</p>
-<p>http {<br>    include       mime.types;<br>    default_type  application&#x2F;octet-stream;</p>
+<p>2. 另存为 XXX.cmd</p>
+<p>3. 文件名随便就行。然后以管理员权限运行。</p>
+<p>最后跑完内容后，再 win + R 运行框内 gpedit.msc 就可以了。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-05T03:05:00.000Z" title="2024/6/5 11:05:00">2024-06-05</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-05T03:06:01.160Z" title="2024/6/5 11:06:01">2024-06-05</time></span><span class="level-item">4 minutes read (About 584 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/05/NGINX%E6%90%AD%E5%BB%BA%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">NGINX搭建负载均衡</a></p><div class="content"><p>#user  nobody;<br>
+worker_processes  1;</p>
+<p>#error_log  logs/error.log;<br>
+#error_log  logs/error.log  notice;<br>
+#error_log  logs/error.log  info;</p>
+<p>#pid        logs/nginx.pid;</p>
+<p>events {<br>
+worker_connections  1024;<br>
+}</p>
+<p>http {<br>
+include       mime.types;<br>
+default_type  application/octet-stream;</p>
 <pre><code>map $http_upgrade $connection_upgrade &#123;
-    default upgrade;
-    &#39;&#39; close;
+	default upgrade;
+	'' close;
    &#125;
    
-#log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;
-#                  &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;
-#                  &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;
+#log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+#                  '$status $body_bytes_sent &quot;$http_referer&quot; '
+#                  '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
 
 #access_log  logs/access.log  main;
 
@@ -77,86 +89,86 @@ types_hash_bucket_size 1024;
 
 
 upstream websocket &#123;
-        ip_hash;
-        server ip:port;
-        server ip:port;
-        
+		ip_hash;
+		server ip:port;
+		server ip:port;
+		
     &#125;
-    
+	
     server &#123;
-        listen     80;
-        server_name www.baidu.com;
-        
-        
-        location / &#123;
-            
-            #此处是nignx负载路径重写，重定向
-            rewrite ^/$ http://$server_name/DW permanent;
-            
-            add_header X-Content-Type-Options nosniff;
-            proxy_set_header X-scheme $scheme;
-            
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
-            proxy_set_header X-Nginx-Proxy true;
-            proxy_hide_header X-Powered-By;
-            proxy_hide_header Vary;
-            proxy_pass http://websocket;
-            proxy_http_version 1.1;
-            proxy_set_header Origin &#39;&#39;;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_connect_timeout 1800; 
-            proxy_read_timeout 900; 
-            proxy_send_timeout 900; 
-        
+		listen     80;
+		server_name www.baidu.com;
+		
+		
+		location / &#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DW permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin '';
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
 
 
-            #proxy_set_header   Host             $host; 
-            #proxy_set_header   X-Real-IP        $remote_addr; 
-            #proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
 
-        &#125;
+		&#125;
 
-    &#125;
-    
-    server &#123;
-        listen     80;
-        server_name www.qq.com;
-        
-        
-        location / &#123;
-            
-            #此处是nignx负载路径重写，重定向
-            rewrite ^/$ http://$server_name/DWeb/dw/index.html permanent;
-            
-            add_header X-Content-Type-Options nosniff;
-            proxy_set_header X-scheme $scheme;
-            
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
-            proxy_set_header X-Nginx-Proxy true;
-            proxy_hide_header X-Powered-By;
-            proxy_hide_header Vary;
-            proxy_pass http://websocket;
-            proxy_http_version 1.1;
-            proxy_set_header Origin &#39;&#39;;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_connect_timeout 1800; 
-            proxy_read_timeout 900; 
-            proxy_send_timeout 900; 
-        
+	&#125;
+	
+	server &#123;
+		listen     80;
+		server_name www.qq.com;
+		
+		
+		location / &#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DWeb/dw/index.html permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin '';
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
 
 
-            #proxy_set_header   Host             $host; 
-            #proxy_set_header   X-Real-IP        $remote_addr; 
-            #proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
 
-        &#125;
-    &#125;	
+		&#125;
+	&#125;	
 &#125;
 
 
@@ -198,8 +210,8 @@ upstream websocket &#123;
     #    include        fastcgi_params;
     #&#125;
 
-    # deny access to .htaccess files, if Apache&#39;s document root
-    # concurs with nginx&#39;s one
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
     #
     #location ~ /\.ht &#123;
     #    deny  all;
@@ -240,19 +252,21 @@ upstream websocket &#123;
 #        root   html;
 #        index  index.html index.htm;
 #    &#125;
-#&#125;
-</code></pre>
-</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-05-08T09:34:56.000Z" title="2024/5/8 17:34:56">2024-05-08</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-17T12:08:00.498Z" title="2024/5/17 20:08:00">2024-05-17</time></span><span class="level-item">a minute read (About 127 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/">东方通（TongWeb）定时自动重启任务</a></p><div class="content"><p>#首先执行<code>crontab -e</code>进入定时任务内<br>#然后将下面的任务复制粘贴进去，wq!保存退出<br>#重启crontab任务即可</p>
-<p>#每天早晨5:00停机</p>
+#&#125;</code></pre>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-05-08T09:34:56.000Z" title="2024/5/8 17:34:56">2024-05-08</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-05-17T12:08:00.498Z" title="2024/5/17 20:08:00">2024-05-17</time></span><span class="level-item">a minute read (About 127 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/">东方通（TongWeb）定时自动重启任务</a></p><div class="content"><p>#首先执行 <code>crontab -e</code>  进入定时任务内<br>
+ #然后将下面的任务复制粘贴进去，wq! 保存退出<br>
+ #重启 crontab 任务即可</p>
+<p>#每天早晨 5:00 停机</p>
 <pre><code>00 05 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 </code></pre>
-<p>#每天早晨5:04启动</p>
+<p>#每天早晨 5:04 启动</p>
 <pre><code>04 05 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh
 </code></pre>
-<p>#每天中午13:00停机</p>
+<p>#每天中午 13:00 停机</p>
 <pre><code>00 13 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 </code></pre>
-<p>#每天中午13:04重启<br>    04 13 * * * cd &#x2F;opt&#x2F;TongWeb7.0&#x2F;bin;.&#x2F;startservernohup.sh</p>
+<p>#每天中午 13:04 重启<br>
+ 04 13 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh</p>
 <p><img src="/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/dingshirenwu.png" alt="crontab格式说明"></p>
 <p>太高级了，简直简单的不要不要的！！！！！！！</p>
 <p>又搞定了一个大事儿。</p>

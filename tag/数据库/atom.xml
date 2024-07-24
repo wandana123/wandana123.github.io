@@ -4,18 +4,21 @@
     <title>全栈技术 • Posts by &#34;数据库&#34; tag</title>
     <link href="https://wandana123.github.io" />
     <updated>2024-06-26T02:53:38.000Z</updated>
+    <category term="数据库" />
     <category term="WINDOWS" />
     <category term="中间件" />
-    <category term="数据库" />
     <entry>
         <id>https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/</id>
         <title>神通数据库查询某个模式下所有表的大小</title>
         <link rel="alternate" href="https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/"/>
-        <content type="html">&lt;p&gt;业务场景：&lt;br&gt;    有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。&lt;/p&gt;
+        <content type="html">&lt;p&gt;业务场景：&lt;br&gt;
+有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;下面是具体sql。
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;SELECT TMP.NSPNAME AS &amp;quot;Sechma&amp;quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &amp;quot;Size(M)&amp;quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&amp;#39;SYSDBA&amp;#39;) and TMP.RELKIND =&amp;#39;r&amp;#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;&lt;/code&gt;&lt;/p&gt;
-&lt;h1 id=&#34;搞定，收工！！！&#34;&gt;&lt;a href=&#34;#搞定，收工！！！&#34; class=&#34;headerlink&#34; title=&#34;搞定，收工！！！&#34;&gt;&lt;/a&gt;搞定，收工！！！&lt;/h1&gt;&lt;h1 id=&#34;打卡，下班！！！&#34;&gt;&lt;a href=&#34;#打卡，下班！！！&#34; class=&#34;headerlink&#34; title=&#34;打卡，下班！！！&#34;&gt;&lt;/a&gt;打卡，下班！！！&lt;/h1&gt;</content>
+&lt;p&gt;&lt;code&gt;SELECT TMP.NSPNAME AS &amp;quot;Sechma&amp;quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &amp;quot;Size(M)&amp;quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&#39;SYSDBA&#39;) and TMP.RELKIND =&#39;r&#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;&lt;/code&gt;&lt;/p&gt;
+&lt;h1 id=&#34;搞定收工&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#搞定收工&#34;&gt;#&lt;/a&gt; 搞定，收工！！！&lt;/h1&gt;
+&lt;h1 id=&#34;打卡下班&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#打卡下班&#34;&gt;#&lt;/a&gt; 打卡，下班！！！&lt;/h1&gt;
+</content>
         <category term="数据库" />
         <updated>2024-06-26T02:53:38.000Z</updated>
     </entry>

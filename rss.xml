@@ -7,20 +7,23 @@
         <language>en</language>
         <pubDate>Wed, 26 Jun 2024 10:53:38 +0800</pubDate>
         <lastBuildDate>Wed, 26 Jun 2024 10:53:38 +0800</lastBuildDate>
+        <category>数据库</category>
         <category>WINDOWS</category>
         <category>中间件</category>
-        <category>数据库</category>
         <item>
             <guid isPermalink="true">https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/</guid>
             <title>神通数据库查询某个模式下所有表的大小</title>
             <link>https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/</link>
             <category>数据库</category>
             <pubDate>Wed, 26 Jun 2024 10:53:38 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;业务场景：&lt;br&gt;    有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。&lt;/p&gt;
+            <description><![CDATA[ &lt;p&gt;业务场景：&lt;br&gt;
+有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;下面是具体sql。
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;SELECT TMP.NSPNAME AS &amp;quot;Sechma&amp;quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &amp;quot;Size(M)&amp;quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&amp;#39;SYSDBA&amp;#39;) and TMP.RELKIND =&amp;#39;r&amp;#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;&lt;/code&gt;&lt;/p&gt;
-&lt;h1 id=&#34;搞定，收工！！！&#34;&gt;&lt;a href=&#34;#搞定，收工！！！&#34; class=&#34;headerlink&#34; title=&#34;搞定，收工！！！&#34;&gt;&lt;/a&gt;搞定，收工！！！&lt;/h1&gt;&lt;h1 id=&#34;打卡，下班！！！&#34;&gt;&lt;a href=&#34;#打卡，下班！！！&#34; class=&#34;headerlink&#34; title=&#34;打卡，下班！！！&#34;&gt;&lt;/a&gt;打卡，下班！！！&lt;/h1&gt; ]]></description>
+&lt;p&gt;&lt;code&gt;SELECT TMP.NSPNAME AS &amp;quot;Sechma&amp;quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &amp;quot;Size(M)&amp;quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&#39;SYSDBA&#39;) and TMP.RELKIND =&#39;r&#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;&lt;/code&gt;&lt;/p&gt;
+&lt;h1 id=&#34;搞定收工&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#搞定收工&#34;&gt;#&lt;/a&gt; 搞定，收工！！！&lt;/h1&gt;
+&lt;h1 id=&#34;打卡下班&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#打卡下班&#34;&gt;#&lt;/a&gt; 打卡，下班！！！&lt;/h1&gt;
+ ]]></description>
         </item>
         <item>
             <guid isPermalink="true">https://wandana123.github.io/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</guid>
@@ -28,17 +31,19 @@
             <link>https://wandana123.github.io/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/</link>
             <category>WINDOWS</category>
             <pubDate>Thu, 13 Jun 2024 14:52:31 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;问题描述：&lt;br&gt;    win + R运行框内gpedit.msc调不起来组策略。&lt;/p&gt;
-&lt;p&gt;解决方案：&lt;br&gt;1.随便哪个位置，新建一个txt文档，粘贴如下内容。&lt;/p&gt;
+            <description><![CDATA[ &lt;p&gt;问题描述：&lt;br&gt;
+win + R 运行框内 gpedit.msc 调不起来组策略。&lt;/p&gt;
+&lt;p&gt;解决方案：&lt;br&gt;
+1. 随便哪个位置，新建一个 txt 文档，粘贴如下内容。&lt;/p&gt;
 &lt;p&gt;@echo off&lt;/p&gt;
 &lt;p&gt;pushd “%~dp0”&lt;/p&gt;
-&lt;p&gt;dir &amp;#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &amp;gt;List.txt&lt;/p&gt;
-&lt;p&gt;dir &amp;#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &amp;gt;&amp;gt;List.txt&lt;/p&gt;
-&lt;p&gt;for &amp;#x2F;f %%i in (‘findstr &amp;#x2F;i . List.txt 2^&amp;gt;nul’) do dism &amp;#x2F;online &amp;#x2F;norestart &amp;#x2F;add-package:”C:\Windows\servicing\Packages%%i”&lt;/p&gt;
+&lt;p&gt;dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &amp;gt;List.txt&lt;/p&gt;
+&lt;p&gt;dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &amp;gt;&amp;gt;List.txt&lt;/p&gt;
+&lt;p&gt;for /f %%i in (‘findstr /i . List.txt 2^&amp;gt;nul’) do dism /online /norestart /add-package:“C:\Windows\servicing\Packages%%i”&lt;/p&gt;
 &lt;p&gt;pause&lt;/p&gt;
-&lt;p&gt;2.另存为XXX.cmd&lt;/p&gt;
-&lt;p&gt;3.文件名随便就行。然后以管理员权限运行。&lt;/p&gt;
-&lt;p&gt;最后跑完内容后，再win + R运行框内gpedit.msc就可以了。&lt;/p&gt;
+&lt;p&gt;2. 另存为 XXX.cmd&lt;/p&gt;
+&lt;p&gt;3. 文件名随便就行。然后以管理员权限运行。&lt;/p&gt;
+&lt;p&gt;最后跑完内容后，再 win + R 运行框内 gpedit.msc 就可以了。&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -46,19 +51,26 @@
             <title>NGINX搭建负载均衡</title>
             <link>https://wandana123.github.io/2024/06/05/NGINX%E6%90%AD%E5%BB%BA%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</link>
             <pubDate>Wed, 05 Jun 2024 11:05:00 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;#user  nobody;&lt;br&gt;worker_processes  1;&lt;/p&gt;
-&lt;p&gt;#error_log  logs&amp;#x2F;error.log;&lt;br&gt;#error_log  logs&amp;#x2F;error.log  notice;&lt;br&gt;#error_log  logs&amp;#x2F;error.log  info;&lt;/p&gt;
-&lt;p&gt;#pid        logs&amp;#x2F;nginx.pid;&lt;/p&gt;
-&lt;p&gt;events {&lt;br&gt;    worker_connections  1024;&lt;br&gt;}&lt;/p&gt;
-&lt;p&gt;http {&lt;br&gt;    include       mime.types;&lt;br&gt;    default_type  application&amp;#x2F;octet-stream;&lt;/p&gt;
+            <description><![CDATA[ &lt;p&gt;#user  nobody;&lt;br&gt;
+worker_processes  1;&lt;/p&gt;
+&lt;p&gt;#error_log  logs/error.log;&lt;br&gt;
+#error_log  logs/error.log  notice;&lt;br&gt;
+#error_log  logs/error.log  info;&lt;/p&gt;
+&lt;p&gt;#pid        logs/nginx.pid;&lt;/p&gt;
+&lt;p&gt;events {&lt;br&gt;
+worker_connections  1024;&lt;br&gt;
+}&lt;/p&gt;
+&lt;p&gt;http {&lt;br&gt;
+include       mime.types;&lt;br&gt;
+default_type  application/octet-stream;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;map $http_upgrade $connection_upgrade &amp;#123;
-    default upgrade;
-    &amp;#39;&amp;#39; close;
+	default upgrade;
+	&#39;&#39; close;
    &amp;#125;
    
-#log_format  main  &amp;#39;$remote_addr - $remote_user [$time_local] &amp;quot;$request&amp;quot; &amp;#39;
-#                  &amp;#39;$status $body_bytes_sent &amp;quot;$http_referer&amp;quot; &amp;#39;
-#                  &amp;#39;&amp;quot;$http_user_agent&amp;quot; &amp;quot;$http_x_forwarded_for&amp;quot;&amp;#39;;
+#log_format  main  &#39;$remote_addr - $remote_user [$time_local] &amp;quot;$request&amp;quot; &#39;
+#                  &#39;$status $body_bytes_sent &amp;quot;$http_referer&amp;quot; &#39;
+#                  &#39;&amp;quot;$http_user_agent&amp;quot; &amp;quot;$http_x_forwarded_for&amp;quot;&#39;;
 
 #access_log  logs/access.log  main;
 
@@ -79,86 +91,86 @@ types_hash_bucket_size 1024;
 
 
 upstream websocket &amp;#123;
-        ip_hash;
-        server ip:port;
-        server ip:port;
-        
+		ip_hash;
+		server ip:port;
+		server ip:port;
+		
     &amp;#125;
-    
+	
     server &amp;#123;
-        listen     80;
-        server_name www.baidu.com;
-        
-        
-        location / &amp;#123;
-            
-            #此处是nignx负载路径重写，重定向
-            rewrite ^/$ http://$server_name/DW permanent;
-            
-            add_header X-Content-Type-Options nosniff;
-            proxy_set_header X-scheme $scheme;
-            
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
-            proxy_set_header X-Nginx-Proxy true;
-            proxy_hide_header X-Powered-By;
-            proxy_hide_header Vary;
-            proxy_pass http://websocket;
-            proxy_http_version 1.1;
-            proxy_set_header Origin &amp;#39;&amp;#39;;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_connect_timeout 1800; 
-            proxy_read_timeout 900; 
-            proxy_send_timeout 900; 
-        
+		listen     80;
+		server_name www.baidu.com;
+		
+		
+		location / &amp;#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DW permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin &#39;&#39;;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
 
 
-            #proxy_set_header   Host             $host; 
-            #proxy_set_header   X-Real-IP        $remote_addr; 
-            #proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
 
-        &amp;#125;
+		&amp;#125;
 
-    &amp;#125;
-    
-    server &amp;#123;
-        listen     80;
-        server_name www.qq.com;
-        
-        
-        location / &amp;#123;
-            
-            #此处是nignx负载路径重写，重定向
-            rewrite ^/$ http://$server_name/DWeb/dw/index.html permanent;
-            
-            add_header X-Content-Type-Options nosniff;
-            proxy_set_header X-scheme $scheme;
-            
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
-            proxy_set_header X-Nginx-Proxy true;
-            proxy_hide_header X-Powered-By;
-            proxy_hide_header Vary;
-            proxy_pass http://websocket;
-            proxy_http_version 1.1;
-            proxy_set_header Origin &amp;#39;&amp;#39;;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_connect_timeout 1800; 
-            proxy_read_timeout 900; 
-            proxy_send_timeout 900; 
-        
+	&amp;#125;
+	
+	server &amp;#123;
+		listen     80;
+		server_name www.qq.com;
+		
+		
+		location / &amp;#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DWeb/dw/index.html permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin &#39;&#39;;
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
 
 
-            #proxy_set_header   Host             $host; 
-            #proxy_set_header   X-Real-IP        $remote_addr; 
-            #proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
 
-        &amp;#125;
-    &amp;#125;	
+		&amp;#125;
+	&amp;#125;	
 &amp;#125;
 
 
@@ -200,8 +212,8 @@ upstream websocket &amp;#123;
     #    include        fastcgi_params;
     #&amp;#125;
 
-    # deny access to .htaccess files, if Apache&amp;#39;s document root
-    # concurs with nginx&amp;#39;s one
+    # deny access to .htaccess files, if Apache&#39;s document root
+    # concurs with nginx&#39;s one
     #
     #location ~ /\.ht &amp;#123;
     #    deny  all;
@@ -242,8 +254,7 @@ upstream websocket &amp;#123;
 #        root   html;
 #        index  index.html index.htm;
 #    &amp;#125;
-#&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
+#&amp;#125;&lt;/code&gt;&lt;/pre&gt;
  ]]></description>
         </item>
         <item>
@@ -252,17 +263,20 @@ upstream websocket &amp;#123;
             <link>https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/</link>
             <category>中间件</category>
             <pubDate>Wed, 08 May 2024 17:34:56 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;#首先执行&lt;code&gt;crontab -e&lt;/code&gt;进入定时任务内&lt;br&gt;#然后将下面的任务复制粘贴进去，wq!保存退出&lt;br&gt;#重启crontab任务即可&lt;/p&gt;
-&lt;p&gt;#每天早晨5:00停机&lt;/p&gt;
+            <description><![CDATA[ &lt;p&gt;#首先执行 &lt;code&gt;crontab -e&lt;/code&gt;  进入定时任务内&lt;br&gt;
+ #然后将下面的任务复制粘贴进去，wq! 保存退出&lt;br&gt;
+ #重启 crontab 任务即可&lt;/p&gt;
+&lt;p&gt;#每天早晨 5:00 停机&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;00 05 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天早晨5:04启动&lt;/p&gt;
+&lt;p&gt;#每天早晨 5:04 启动&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;04 05 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天中午13:00停机&lt;/p&gt;
+&lt;p&gt;#每天中午 13:00 停机&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;00 13 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天中午13:04重启&lt;br&gt;    04 13 * * * cd &amp;#x2F;opt&amp;#x2F;TongWeb7.0&amp;#x2F;bin;.&amp;#x2F;startservernohup.sh&lt;/p&gt;
+&lt;p&gt;#每天中午 13:04 重启&lt;br&gt;
+ 04 13 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/dingshirenwu.png&#34; alt=&#34;crontab格式说明&#34;&gt;&lt;/p&gt;
 &lt;p&gt;太高级了，简直简单的不要不要的！！！！！！！&lt;/p&gt;
 &lt;p&gt;又搞定了一个大事儿。&lt;/p&gt;
