@@ -1,14 +1,12 @@
-<div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">Tags</a></li><li class="is-active"><a href="#" aria-current="page">WINDOWS</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-13T06:52:31.000Z" title="2024/6/13 14:52:31">2024-06-13</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-14T09:58:42.029Z" title="2024/6/14 17:58:42">2024-06-14</time></span><span class="level-item">a minute read (About 147 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/">WIN10&amp;&amp;WIN11组策略无法打开的问题处理</a></p><div class="content"><p>问题描述：<br>
-win + R 运行框内 gpedit.msc 调不起来组策略。</p>
-<p>解决方案：<br>
-1. 随便哪个位置，新建一个 txt 文档，粘贴如下内容。</p>
+<div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">Tags</a></li><li class="is-active"><a href="#" aria-current="page">WINDOWS</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-13T06:52:31.000Z" title="2024/6/13 14:52:31">2024-06-13</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-14T09:58:42.029Z" title="2024/6/14 17:58:42">2024-06-14</time></span><span class="level-item">a minute read (About 147 words)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/">WIN10&amp;&amp;WIN11组策略无法打开的问题处理</a></p><div class="content"><p>问题描述：<br>    win + R运行框内gpedit.msc调不起来组策略。</p>
+<p>解决方案：<br>1.随便哪个位置，新建一个txt文档，粘贴如下内容。</p>
 <p>@echo off</p>
 <p>pushd “%~dp0”</p>
-<p>dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &gt;List.txt</p>
-<p>dir /b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &gt;&gt;List.txt</p>
-<p>for /f %%i in (‘findstr /i . List.txt 2^&gt;nul’) do dism /online /norestart /add-package:“C:\Windows\servicing\Packages%%i”</p>
+<p>dir &#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &gt;List.txt</p>
+<p>dir &#x2F;b C:\Windows\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &gt;&gt;List.txt</p>
+<p>for &#x2F;f %%i in (‘findstr &#x2F;i . List.txt 2^&gt;nul’) do dism &#x2F;online &#x2F;norestart &#x2F;add-package:”C:\Windows\servicing\Packages%%i”</p>
 <p>pause</p>
-<p>2. 另存为 XXX.cmd</p>
-<p>3. 文件名随便就行。然后以管理员权限运行。</p>
-<p>最后跑完内容后，再 win + R 运行框内 gpedit.msc 就可以了。</p>
+<p>2.另存为XXX.cmd</p>
+<p>3.文件名随便就行。然后以管理员权限运行。</p>
+<p>最后跑完内容后，再win + R运行框内gpedit.msc就可以了。</p>
 </div></article></div>

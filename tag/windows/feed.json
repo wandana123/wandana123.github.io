@@ -9,7 +9,7 @@
             "url": "https://wandana123.github.io/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/",
             "title": "WIN10&&WIN11组策略无法打开的问题处理",
             "date_published": "2024-06-13T06:52:31.000Z",
-            "content_html": "<p>问题描述：<br>\nwin + R 运行框内 gpedit.msc 调不起来组策略。</p>\n<p>解决方案：<br>\n1. 随便哪个位置，新建一个 txt 文档，粘贴如下内容。</p>\n<p>@echo off</p>\n<p>pushd “%~dp0”</p>\n<p>dir /b C:\\Windows\\servicing\\Packages\\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &gt;List.txt</p>\n<p>dir /b C:\\Windows\\servicing\\Packages\\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &gt;&gt;List.txt</p>\n<p>for /f %%i in (‘findstr /i . List.txt 2^&gt;nul’) do dism /online /norestart /add-package:“C:\\Windows\\servicing\\Packages%%i”</p>\n<p>pause</p>\n<p>2. 另存为 XXX.cmd</p>\n<p>3. 文件名随便就行。然后以管理员权限运行。</p>\n<p>最后跑完内容后，再 win + R 运行框内 gpedit.msc 就可以了。</p>\n",
+            "content_html": "<p>问题描述：<br>    win + R运行框内gpedit.msc调不起来组策略。</p>\n<p>解决方案：<br>1.随便哪个位置，新建一个txt文档，粘贴如下内容。</p>\n<p>@echo off</p>\n<p>pushd “%~dp0”</p>\n<p>dir &#x2F;b C:\\Windows\\servicing\\Packages\\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum &gt;List.txt</p>\n<p>dir &#x2F;b C:\\Windows\\servicing\\Packages\\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum &gt;&gt;List.txt</p>\n<p>for &#x2F;f %%i in (‘findstr &#x2F;i . List.txt 2^&gt;nul’) do dism &#x2F;online &#x2F;norestart &#x2F;add-package:”C:\\Windows\\servicing\\Packages%%i”</p>\n<p>pause</p>\n<p>2.另存为XXX.cmd</p>\n<p>3.文件名随便就行。然后以管理员权限运行。</p>\n<p>最后跑完内容后，再win + R运行框内gpedit.msc就可以了。</p>\n",
             "tags": [
                 "WINDOWS"
             ]
