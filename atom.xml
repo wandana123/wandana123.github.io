@@ -3,10 +3,142 @@
     <id>https://wandana123.github.io</id>
     <title>全栈技术</title>
     <link href="https://wandana123.github.io" />
-    <updated>2024-06-26T02:53:38.000Z</updated>
+    <updated>2024-07-24T07:37:37.000Z</updated>
     <category term="数据库" />
-    <category term="WINDOWS" />
     <category term="中间件" />
+    <category term="WINDOWS" />
+    <entry>
+        <id>https://wandana123.github.io/2024/07/24/sql%E3%81%AEoracle%E8%A1%A8%E7%A9%BA%E9%97%B4%E6%89%A9%E5%AE%B9/</id>
+        <title>sqlのoracle表空间扩容</title>
+        <link rel="alternate" href="https://wandana123.github.io/2024/07/24/sql%E3%81%AEoracle%E8%A1%A8%E7%A9%BA%E9%97%B4%E6%89%A9%E5%AE%B9/"/>
+        <content type="html">&lt;p&gt;业务场景：&lt;/p&gt;
+&lt;p&gt;记录一下，2024 年 7 月 24，发生了一场不大不小的生产事故，导致一个地级市整个城市的某个业务系统停服一上午。也吸取一下深刻的教训。简单来讲，导致该事故最直接的原因就是这个业务系统现场人员为按时巡检导致，该系统数据库表空间满了没人知道，直到客户反馈业务传输有问题了，才开始排查，排查发现录入的信息数据库内无法查找，抽取日志查看发现表空间无法自动扩容。&lt;br&gt;
+所以运维工作中，日常巡检的必要性还是毋庸置疑的。&lt;/p&gt;
+&lt;p&gt;扩容用有 dba 权限的账号，通过 plsql 客户端直接操作的。是使用增加数据文件的方式进行扩容。&lt;strong&gt;建议表空间超过 90% 就直接扩容&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;–查询表空间使用情况&lt;br&gt;
+ &lt;code&gt;SELECT a.tablespace_name &amp;quot;表空间名&amp;quot;,        round(total / (1024 * 1024 * 1024), 2) &amp;quot;表空间大小(G)&amp;quot;,        round(free / (1024 * 1024 * 1024), 2) &amp;quot;表空间剩余大小(G)&amp;quot;,        round((total - free) / (1024 * 1024 * 1024), 2) &amp;quot;表空间使用大小(G)&amp;quot;,        round((total - free) / total, 4) * 100 &amp;quot;使用率 %&amp;quot;   FROM (SELECT tablespace_name, SUM(bytes) free           FROM dba_free_space          GROUP BY tablespace_name) a,        (SELECT tablespace_name, SUM(bytes) total           FROM dba_data_files          GROUP BY tablespace_name) b  WHERE a.tablespace_name = b.tablespace_name&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;–临时表空间使用率&lt;br&gt;
+ &lt;code&gt;select c.tablespace_name &amp;quot;临时表空间名&amp;quot;,        round(c.bytes / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间大小(G)&amp;quot;,        round((c.bytes - d.bytes_used) / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间剩余大小(G)&amp;quot;,        round(d.bytes_used / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间使用大小(G)&amp;quot;,        round(d.bytes_used * 100 / c.bytes, 4) || &#39;%&#39; &amp;quot;使用率 %&amp;quot;   from (select tablespace_name, sum(bytes) bytes           from dba_temp_files          GROUP by tablespace_name) c,        (select tablespace_name, sum(bytes_cached) bytes_used           from v$temp_extent_pool          GROUP by tablespace_name) d  where c.tablespace_name = d.tablespace_name;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;–查询表空间位置&lt;br&gt;
+ &lt;code&gt;SELECT TABLESPACE_NAME &amp;quot;表空间名&amp;quot;, BYTES/1024/1024 &amp;quot;表空间大小(M)&amp;quot;, FILE_NAME &amp;quot;文件路径&amp;quot;,FILE_ID &amp;quot;文件ID&amp;quot; FROM DBA_DATA_FILES order by TABLESPACE_NAME,FILE_NAME; &lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;扩容：&lt;br&gt;
+–一个表空间最大为 32g，超过 32g 需要增加，例如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;alter tablespace DAS ADD  datafile &#39;/mc_data/oradata/zsk/das01.dbf&#39; SIZE 30G;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;扩展阅读：&lt;/p&gt;
+&lt;p&gt;删除表空间扩容文件:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#alter tablespace 表空间名称 drop datafile 文件id;
+alter tablespace UNDOTBS1 drop datafile 6;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;删除临时表空间扩容文件:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#alter tablespace 临时表空间名称 drop tempfile 文件id;
+alter tablespace UNDOTBS2 drop tempfile 7;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;清理表空间：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;alter  tablespace  IRFS_TEMP shrink space;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;创建各种类型表空间：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;-- 创建大小为50mb的永久表空间TEST01，禁止自动扩展数据文件
+create tablespace TEST01
+logging
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST01.dbf&#39; size 50m
+reuse autoextend off;
+
+-- 创建永久表空间TEST02，允许自动扩展数据文件，本地管理方式
+create tablespace TEST02
+logging
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST02.dbf&#39; size 50m
+reuse autoextend on next 10m maxsize 200m
+extent management local;
+
+-- 创建永久表空间TEST03，允许自动扩展数据文件，本地管理方式，区分配方式为自动分配
+create tablespace TEST03
+logging
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST03.dbf&#39; size 50m
+reuse autoextend on next 10m maxsize 200m
+extent management local autoallocate;
+
+-- 创建永久表空间TEST04，允许自动扩展数据文件，本地管理方式，区分配方式为定制分配
+create tablespace TEST04
+logging
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST04.dbf&#39; size 50m
+reuse autoextend on next 10m maxsize 200m
+extent management local uniform size 10m;
+
+-- 创建永久表空间TEST05，允许自动扩展数据文件，本地管理方式，区分配方式为自动分配，段管理方式为自动管理
+create tablespace test05
+logging
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST05.dbf&#39; size 50m
+reuse autoextend on next 10m maxsize 200M
+extent management local autoallocate
+segment space management auto;
+
+-- 创建永久表空间TEST06，允许自动扩展数据文件，本地管理方式，区分配方式为定制分配，段管理方式为手动管理
+create tablespace test06
+logging
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST06.dbf&#39; size 50m
+reuse autoextend on next 10m maxsize 200M
+extent management local uniform size 10m
+segment space management manual;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;扩容 oracle 表空间的四种方法&lt;/p&gt;
+&lt;p&gt;示例 1：新增数据文件&lt;br&gt;
+ ALTER TABLESPACE DSA ADD DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DAS01.DBF’ SIZE 102400M;&lt;/p&gt;
+&lt;p&gt;示例 2：新增数据文件，允许数据文件自动增长&lt;br&gt;
+ ALTER TABLESPACE DSA ADD DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ SIZE 50M AUTOEXTEND ON NEXT 5M MAXSIZE 100M;&lt;/p&gt;
+&lt;p&gt;示例 3：允许已存在的数据文件自动增长&lt;br&gt;
+ ALTER DATABASE DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ AUTOEXTEND ON NEXT 5M MAXSIZE 100M;&lt;/p&gt;
+&lt;p&gt;示例 4：手工改变已存在数据文件的大小&lt;br&gt;
+ ALTER DATABASE DATAFILE ‘D:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ RESIZE 100M;&lt;/p&gt;
+</content>
+        <category term="数据库" />
+        <updated>2024-07-24T07:37:37.000Z</updated>
+    </entry>
+    <entry>
+        <id>https://wandana123.github.io/2024/07/24/sql%E3%81%AEupdate-case-when-%E7%9A%84%E7%8E%A9%E6%B3%95/</id>
+        <title>sqlのupdate case when 的玩法</title>
+        <link rel="alternate" href="https://wandana123.github.io/2024/07/24/sql%E3%81%AEupdate-case-when-%E7%9A%84%E7%8E%A9%E6%B3%95/"/>
+        <content type="html">&lt;p&gt;业务场景：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;有部分数据需要按条件做判断来update某个表的字段值。这个我是怎么实现的呢？
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;sql：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;UPDATE user 
+SET order = CASE
+WHEN id = &#39;1&#39; THEN &#39;1&#39; 
+WHEN id = &#39;2&#39; THEN &#39;2&#39; 
+END;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;当然，这个语句还可以扩展一下，例如如下用法：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;示例1：
+UPDATE graduates 
+SET income = CASE
+WHEN income = 20000 THEN income * 0.5 
+WHEN income = 15000 THEN income + 500 
+ELSE income 
+END;
+
+示例2：
+UPDATE customers
+SET age = CASE 
+WHEN age &amp;lt; 30 THEN age + 1
+ELSE age
+END;
+
+示例3：
+UPDATE customers
+SET 
+age = CASE 
+    WHEN city = &#39;New York&#39; THEN age + 1
+    ELSE age
+END,
+country = CASE 
+    WHEN city = &#39;New York&#39; THEN &#39;USA&#39;
+    ELSE country
+END;&lt;/code&gt;&lt;/pre&gt;
+</content>
+        <category term="数据库" />
+        <updated>2024-07-24T01:23:36.000Z</updated>
+    </entry>
     <entry>
         <id>https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/</id>
         <title>神通数据库查询某个模式下所有表的大小</title>
