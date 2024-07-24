@@ -4,21 +4,26 @@
     <title>全栈技术 • Posts by &#34;数据库&#34; tag</title>
     <link href="https://wandana123.github.io" />
     <updated>2024-07-24T07:37:37.000Z</updated>
-    <category term="数据库" />
     <category term="WINDOWS" />
+    <category term="数据库" />
     <category term="中间件" />
     <entry>
         <id>https://wandana123.github.io/2024/07/24/sql%E3%81%AEoracle%E8%A1%A8%E7%A9%BA%E9%97%B4%E6%89%A9%E5%AE%B9/</id>
         <title>sqlのoracle表空间扩容</title>
         <link rel="alternate" href="https://wandana123.github.io/2024/07/24/sql%E3%81%AEoracle%E8%A1%A8%E7%A9%BA%E9%97%B4%E6%89%A9%E5%AE%B9/"/>
         <content type="html">&lt;p&gt;业务场景：&lt;/p&gt;
-&lt;p&gt;记录一下，2024年7月24，发生了一场不大不小的生产事故，导致一个地级市整个城市的某个业务系统停服一上午。也吸取一下深刻的教训。简单来讲，导致该事故最直接的原因就是这个业务系统现场人员为按时巡检导致，该系统数据库表空间满了没人知道，直到客户反馈业务传输有问题了，才开始排查，排查发现录入的信息数据库内无法查找，抽取日志查看发现表空间无法自动扩容。&lt;br&gt;所以运维工作中，日常巡检的必要性还是毋庸置疑的。&lt;/p&gt;
-&lt;p&gt;扩容用有dba权限的账号，通过plsql客户端直接操作的。是使用增加数据文件的方式进行扩容。&lt;strong&gt;建议表空间超过90%就直接扩容&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;–查询表空间使用情况&lt;br&gt;&lt;code&gt;SELECT a.tablespace_name &amp;quot;表空间名&amp;quot;,        round(total / (1024 * 1024 * 1024), 2) &amp;quot;表空间大小(G)&amp;quot;,        round(free / (1024 * 1024 * 1024), 2) &amp;quot;表空间剩余大小(G)&amp;quot;,        round((total - free) / (1024 * 1024 * 1024), 2) &amp;quot;表空间使用大小(G)&amp;quot;,        round((total - free) / total, 4) * 100 &amp;quot;使用率 %&amp;quot;   FROM (SELECT tablespace_name, SUM(bytes) free           FROM dba_free_space          GROUP BY tablespace_name) a,        (SELECT tablespace_name, SUM(bytes) total           FROM dba_data_files          GROUP BY tablespace_name) b  WHERE a.tablespace_name = b.tablespace_name&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;–临时表空间使用率&lt;br&gt;&lt;code&gt;select c.tablespace_name &amp;quot;临时表空间名&amp;quot;,        round(c.bytes / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间大小(G)&amp;quot;,        round((c.bytes - d.bytes_used) / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间剩余大小(G)&amp;quot;,        round(d.bytes_used / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间使用大小(G)&amp;quot;,        round(d.bytes_used * 100 / c.bytes, 4) || &amp;#39;%&amp;#39; &amp;quot;使用率 %&amp;quot;   from (select tablespace_name, sum(bytes) bytes           from dba_temp_files          GROUP by tablespace_name) c,        (select tablespace_name, sum(bytes_cached) bytes_used           from v$temp_extent_pool          GROUP by tablespace_name) d  where c.tablespace_name = d.tablespace_name;&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;–查询表空间位置&lt;br&gt;&lt;code&gt;SELECT TABLESPACE_NAME &amp;quot;表空间名&amp;quot;, BYTES/1024/1024 &amp;quot;表空间大小(M)&amp;quot;, FILE_NAME &amp;quot;文件路径&amp;quot;,FILE_ID &amp;quot;文件ID&amp;quot; FROM DBA_DATA_FILES order by TABLESPACE_NAME,FILE_NAME; &lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;扩容：&lt;br&gt;–一个表空间最大为32g，超过32g需要增加，例如：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;alter tablespace DAS ADD  datafile &amp;#39;/mc_data/oradata/zsk/das01.dbf&amp;#39; SIZE 30G;
+&lt;p&gt;记录一下，2024 年 7 月 24，发生了一场不大不小的生产事故，导致一个地级市整个城市的某个业务系统停服一上午。也吸取一下深刻的教训。简单来讲，导致该事故最直接的原因就是这个业务系统现场人员为按时巡检导致，该系统数据库表空间满了没人知道，直到客户反馈业务传输有问题了，才开始排查，排查发现录入的信息数据库内无法查找，抽取日志查看发现表空间无法自动扩容。&lt;br&gt;
+所以运维工作中，日常巡检的必要性还是毋庸置疑的。&lt;/p&gt;
+&lt;p&gt;扩容用有 dba 权限的账号，通过 plsql 客户端直接操作的。是使用增加数据文件的方式进行扩容。&lt;strong&gt;建议表空间超过 90% 就直接扩容&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;–查询表空间使用情况&lt;br&gt;
+ &lt;code&gt;SELECT a.tablespace_name &amp;quot;表空间名&amp;quot;,        round(total / (1024 * 1024 * 1024), 2) &amp;quot;表空间大小(G)&amp;quot;,        round(free / (1024 * 1024 * 1024), 2) &amp;quot;表空间剩余大小(G)&amp;quot;,        round((total - free) / (1024 * 1024 * 1024), 2) &amp;quot;表空间使用大小(G)&amp;quot;,        round((total - free) / total, 4) * 100 &amp;quot;使用率 %&amp;quot;   FROM (SELECT tablespace_name, SUM(bytes) free           FROM dba_free_space          GROUP BY tablespace_name) a,        (SELECT tablespace_name, SUM(bytes) total           FROM dba_data_files          GROUP BY tablespace_name) b  WHERE a.tablespace_name = b.tablespace_name&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;–临时表空间使用率&lt;br&gt;
+ &lt;code&gt;select c.tablespace_name &amp;quot;临时表空间名&amp;quot;,        round(c.bytes / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间大小(G)&amp;quot;,        round((c.bytes - d.bytes_used) / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间剩余大小(G)&amp;quot;,        round(d.bytes_used / 1024 / 1024 / 1024, 2) &amp;quot;临时表空间使用大小(G)&amp;quot;,        round(d.bytes_used * 100 / c.bytes, 4) || &#39;%&#39; &amp;quot;使用率 %&amp;quot;   from (select tablespace_name, sum(bytes) bytes           from dba_temp_files          GROUP by tablespace_name) c,        (select tablespace_name, sum(bytes_cached) bytes_used           from v$temp_extent_pool          GROUP by tablespace_name) d  where c.tablespace_name = d.tablespace_name;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;–查询表空间位置&lt;br&gt;
+ &lt;code&gt;SELECT TABLESPACE_NAME &amp;quot;表空间名&amp;quot;, BYTES/1024/1024 &amp;quot;表空间大小(M)&amp;quot;, FILE_NAME &amp;quot;文件路径&amp;quot;,FILE_ID &amp;quot;文件ID&amp;quot; FROM DBA_DATA_FILES order by TABLESPACE_NAME,FILE_NAME; &lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;扩容：&lt;br&gt;
+–一个表空间最大为 32g，超过 32g 需要增加，例如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;alter tablespace DAS ADD  datafile &#39;/mc_data/oradata/zsk/das01.dbf&#39; SIZE 30G;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;扩展阅读：&lt;/p&gt;
 &lt;p&gt;删除表空间扩容文件:&lt;/p&gt;
@@ -36,34 +41,34 @@ alter tablespace UNDOTBS2 drop tempfile 7;
 &lt;pre&gt;&lt;code&gt;-- 创建大小为50mb的永久表空间TEST01，禁止自动扩展数据文件
 create tablespace TEST01
 logging
-datafile&amp;#39;F:\app\oraclezq\oradata\orcl\TEST01.dbf&amp;#39; size 50m
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST01.dbf&#39; size 50m
 reuse autoextend off;
 
 -- 创建永久表空间TEST02，允许自动扩展数据文件，本地管理方式
 create tablespace TEST02
 logging
-datafile&amp;#39;F:\app\oraclezq\oradata\orcl\TEST02.dbf&amp;#39; size 50m
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST02.dbf&#39; size 50m
 reuse autoextend on next 10m maxsize 200m
 extent management local;
 
 -- 创建永久表空间TEST03，允许自动扩展数据文件，本地管理方式，区分配方式为自动分配
 create tablespace TEST03
 logging
-datafile&amp;#39;F:\app\oraclezq\oradata\orcl\TEST03.dbf&amp;#39; size 50m
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST03.dbf&#39; size 50m
 reuse autoextend on next 10m maxsize 200m
 extent management local autoallocate;
 
 -- 创建永久表空间TEST04，允许自动扩展数据文件，本地管理方式，区分配方式为定制分配
 create tablespace TEST04
 logging
-datafile&amp;#39;F:\app\oraclezq\oradata\orcl\TEST04.dbf&amp;#39; size 50m
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST04.dbf&#39; size 50m
 reuse autoextend on next 10m maxsize 200m
 extent management local uniform size 10m;
 
 -- 创建永久表空间TEST05，允许自动扩展数据文件，本地管理方式，区分配方式为自动分配，段管理方式为自动管理
 create tablespace test05
 logging
-datafile&amp;#39;F:\app\oraclezq\oradata\orcl\TEST05.dbf&amp;#39; size 50m
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST05.dbf&#39; size 50m
 reuse autoextend on next 10m maxsize 200M
 extent management local autoallocate
 segment space management auto;
@@ -71,16 +76,20 @@ segment space management auto;
 -- 创建永久表空间TEST06，允许自动扩展数据文件，本地管理方式，区分配方式为定制分配，段管理方式为手动管理
 create tablespace test06
 logging
-datafile&amp;#39;F:\app\oraclezq\oradata\orcl\TEST06.dbf&amp;#39; size 50m
+datafile&#39;F:\app\oraclezq\oradata\orcl\TEST06.dbf&#39; size 50m
 reuse autoextend on next 10m maxsize 200M
 extent management local uniform size 10m
 segment space management manual;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;扩容oracle表空间的四种方法&lt;/p&gt;
-&lt;p&gt;示例1：新增数据文件&lt;br&gt;    ALTER TABLESPACE DSA ADD DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DAS01.DBF’ SIZE 102400M;&lt;/p&gt;
-&lt;p&gt;示例2：新增数据文件，允许数据文件自动增长&lt;br&gt;    ALTER TABLESPACE DSA ADD DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ SIZE 50M AUTOEXTEND ON NEXT 5M MAXSIZE 100M;&lt;/p&gt;
-&lt;p&gt;示例3：允许已存在的数据文件自动增长&lt;br&gt;    ALTER DATABASE DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ AUTOEXTEND ON NEXT 5M MAXSIZE 100M;&lt;/p&gt;
-&lt;p&gt;示例4：手工改变已存在数据文件的大小&lt;br&gt;    ALTER DATABASE DATAFILE ‘D:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ RESIZE 100M;&lt;/p&gt;
+&lt;p&gt;扩容 oracle 表空间的四种方法&lt;/p&gt;
+&lt;p&gt;示例 1：新增数据文件&lt;br&gt;
+ ALTER TABLESPACE DSA ADD DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DAS01.DBF’ SIZE 102400M;&lt;/p&gt;
+&lt;p&gt;示例 2：新增数据文件，允许数据文件自动增长&lt;br&gt;
+ ALTER TABLESPACE DSA ADD DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ SIZE 50M AUTOEXTEND ON NEXT 5M MAXSIZE 100M;&lt;/p&gt;
+&lt;p&gt;示例 3：允许已存在的数据文件自动增长&lt;br&gt;
+ ALTER DATABASE DATAFILE ‘E:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ AUTOEXTEND ON NEXT 5M MAXSIZE 100M;&lt;/p&gt;
+&lt;p&gt;示例 4：手工改变已存在数据文件的大小&lt;br&gt;
+ ALTER DATABASE DATAFILE ‘D:\ORACLE\PRODUCT\10.2.0\ORADATA\DSA01.DBF’ RESIZE 100M;&lt;/p&gt;
 </content>
         <category term="数据库" />
         <updated>2024-07-24T07:37:37.000Z</updated>
@@ -95,17 +104,17 @@ segment space management manual;
 &lt;p&gt;sql：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;UPDATE user 
 SET order = CASE
- WHEN id = &amp;#39;1&amp;#39; THEN &amp;#39;1&amp;#39; 
- WHEN id = &amp;#39;2&amp;#39; THEN &amp;#39;2&amp;#39; 
+WHEN id = &#39;1&#39; THEN &#39;1&#39; 
+WHEN id = &#39;2&#39; THEN &#39;2&#39; 
 END;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;当然，这个语句还可以扩展一下，例如如下用法：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;示例1：
 UPDATE graduates 
 SET income = CASE
- WHEN income = 20000 THEN income * 0.5 
- WHEN income = 15000 THEN income + 500 
- ELSE income 
+WHEN income = 20000 THEN income * 0.5 
+WHEN income = 15000 THEN income + 500 
+ELSE income 
 END;
 
 示例2：
@@ -119,14 +128,13 @@ END;
 UPDATE customers
 SET 
 age = CASE 
-    WHEN city = &amp;#39;New York&amp;#39; THEN age + 1
+    WHEN city = &#39;New York&#39; THEN age + 1
     ELSE age
 END,
 country = CASE 
-    WHEN city = &amp;#39;New York&amp;#39; THEN &amp;#39;USA&amp;#39;
+    WHEN city = &#39;New York&#39; THEN &#39;USA&#39;
     ELSE country
-END;
-&lt;/code&gt;&lt;/pre&gt;
+END;&lt;/code&gt;&lt;/pre&gt;
 </content>
         <category term="数据库" />
         <updated>2024-07-24T01:23:36.000Z</updated>
@@ -135,11 +143,14 @@ END;
         <id>https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/</id>
         <title>神通数据库查询某个模式下所有表的大小</title>
         <link rel="alternate" href="https://wandana123.github.io/2024/06/26/%E7%A5%9E%E9%80%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9F%A5%E8%AF%A2%E6%9F%90%E4%B8%AA%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E5%A4%A7%E5%B0%8F/"/>
-        <content type="html">&lt;p&gt;业务场景：&lt;br&gt;    有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。&lt;/p&gt;
+        <content type="html">&lt;p&gt;业务场景：&lt;br&gt;
+有一天正常巡检发现数据库数据量在成倍增长。按道理，我的业务量，数据不可能会这么疯狂的增量。所以想看看到底是啥数据占用了这么多空间。检查发现有张表里写了文件导致的。&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;下面是具体sql。
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;code&gt;SELECT TMP.NSPNAME AS &amp;quot;Sechma&amp;quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &amp;quot;Size(M)&amp;quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&amp;#39;SYSDBA&amp;#39;) and TMP.RELKIND =&amp;#39;r&amp;#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;&lt;/code&gt;&lt;/p&gt;
-&lt;h1 id=&#34;搞定，收工！！！&#34;&gt;&lt;a href=&#34;#搞定，收工！！！&#34; class=&#34;headerlink&#34; title=&#34;搞定，收工！！！&#34;&gt;&lt;/a&gt;搞定，收工！！！&lt;/h1&gt;&lt;h1 id=&#34;打卡，下班！！！&#34;&gt;&lt;a href=&#34;#打卡，下班！！！&#34; class=&#34;headerlink&#34; title=&#34;打卡，下班！！！&#34;&gt;&lt;/a&gt;打卡，下班！！！&lt;/h1&gt;</content>
+&lt;p&gt;&lt;code&gt;SELECT TMP.NSPNAME AS &amp;quot;Sechma&amp;quot;,        TMP.RELNAME,        SUM(TMP.SIZE) / 1024 /1024 AS &amp;quot;Size(M)&amp;quot;   FROM (SELECT N.NSPNAME, C.RELNAME,c.RELKIND, S.SIZE           FROM V_SEGMENT_INFO S, SYS_CLASS C, SYS_NAMESPACE N          WHERE S.RELID = C.OID            AND C.RELNAMESPACE = N.OID) TMP  WHERE  (TMP.NSPNAME=&#39;SYSDBA&#39;) and TMP.RELKIND =&#39;r&#39;  GROUP BY TMP.NSPNAME, TMP.RELNAME;&lt;/code&gt;&lt;/p&gt;
+&lt;h1 id=&#34;搞定收工&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#搞定收工&#34;&gt;#&lt;/a&gt; 搞定，收工！！！&lt;/h1&gt;
+&lt;h1 id=&#34;打卡下班&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#打卡下班&#34;&gt;#&lt;/a&gt; 打卡，下班！！！&lt;/h1&gt;
+</content>
         <category term="数据库" />
         <updated>2024-06-26T02:53:38.000Z</updated>
     </entry>

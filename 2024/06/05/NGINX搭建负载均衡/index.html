@@ -1,16 +1,23 @@
-<div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-05T03:05:00.000Z" title="2024/6/5 11:05:00">2024-06-05</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-05T03:06:01.160Z" title="2024/6/5 11:06:01">2024-06-05</time></span><span class="level-item">4 minutes read (About 584 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">NGINX搭建负载均衡</h1><div class="content"><p>#user  nobody;<br>worker_processes  1;</p>
-<p>#error_log  logs&#x2F;error.log;<br>#error_log  logs&#x2F;error.log  notice;<br>#error_log  logs&#x2F;error.log  info;</p>
-<p>#pid        logs&#x2F;nginx.pid;</p>
-<p>events {<br>    worker_connections  1024;<br>}</p>
-<p>http {<br>    include       mime.types;<br>    default_type  application&#x2F;octet-stream;</p>
+<div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2024-06-05T03:05:00.000Z" title="2024/6/5 11:05:00">2024-06-05</time></span><span class="level-item">Updated&nbsp;<time dateTime="2024-06-05T03:06:01.160Z" title="2024/6/5 11:06:01">2024-06-05</time></span><span class="level-item">4 minutes read (About 584 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">NGINX搭建负载均衡</h1><div class="content"><p>#user  nobody;<br>
+worker_processes  1;</p>
+<p>#error_log  logs/error.log;<br>
+#error_log  logs/error.log  notice;<br>
+#error_log  logs/error.log  info;</p>
+<p>#pid        logs/nginx.pid;</p>
+<p>events {<br>
+worker_connections  1024;<br>
+}</p>
+<p>http {<br>
+include       mime.types;<br>
+default_type  application/octet-stream;</p>
 <pre><code>map $http_upgrade $connection_upgrade &#123;
-    default upgrade;
-    &#39;&#39; close;
+	default upgrade;
+	'' close;
    &#125;
    
-#log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;
-#                  &#39;$status $body_bytes_sent &quot;$http_referer&quot; &#39;
-#                  &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#39;;
+#log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+#                  '$status $body_bytes_sent &quot;$http_referer&quot; '
+#                  '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
 
 #access_log  logs/access.log  main;
 
@@ -31,86 +38,86 @@ types_hash_bucket_size 1024;
 
 
 upstream websocket &#123;
-        ip_hash;
-        server ip:port;
-        server ip:port;
-        
+		ip_hash;
+		server ip:port;
+		server ip:port;
+		
     &#125;
-    
+	
     server &#123;
-        listen     80;
-        server_name www.baidu.com;
-        
-        
-        location / &#123;
-            
-            #此处是nignx负载路径重写，重定向
-            rewrite ^/$ http://$server_name/DW permanent;
-            
-            add_header X-Content-Type-Options nosniff;
-            proxy_set_header X-scheme $scheme;
-            
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
-            proxy_set_header X-Nginx-Proxy true;
-            proxy_hide_header X-Powered-By;
-            proxy_hide_header Vary;
-            proxy_pass http://websocket;
-            proxy_http_version 1.1;
-            proxy_set_header Origin &#39;&#39;;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_connect_timeout 1800; 
-            proxy_read_timeout 900; 
-            proxy_send_timeout 900; 
-        
+		listen     80;
+		server_name www.baidu.com;
+		
+		
+		location / &#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DW permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin '';
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
 
 
-            #proxy_set_header   Host             $host; 
-            #proxy_set_header   X-Real-IP        $remote_addr; 
-            #proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
 
-        &#125;
+		&#125;
 
-    &#125;
-    
-    server &#123;
-        listen     80;
-        server_name www.qq.com;
-        
-        
-        location / &#123;
-            
-            #此处是nignx负载路径重写，重定向
-            rewrite ^/$ http://$server_name/DWeb/dw/index.html permanent;
-            
-            add_header X-Content-Type-Options nosniff;
-            proxy_set_header X-scheme $scheme;
-            
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
-            proxy_set_header X-Nginx-Proxy true;
-            proxy_hide_header X-Powered-By;
-            proxy_hide_header Vary;
-            proxy_pass http://websocket;
-            proxy_http_version 1.1;
-            proxy_set_header Origin &#39;&#39;;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection $connection_upgrade;
-            proxy_connect_timeout 1800; 
-            proxy_read_timeout 900; 
-            proxy_send_timeout 900; 
-        
+	&#125;
+	
+	server &#123;
+		listen     80;
+		server_name www.qq.com;
+		
+		
+		location / &#123;
+			
+			#此处是nignx负载路径重写，重定向
+			rewrite ^/$ http://$server_name/DWeb/dw/index.html permanent;
+			
+			add_header X-Content-Type-Options nosniff;
+			proxy_set_header X-scheme $scheme;
+			
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header Host $http_host;
+			proxy_set_header X-Nginx-Proxy true;
+			proxy_hide_header X-Powered-By;
+			proxy_hide_header Vary;
+			proxy_pass http://websocket;
+			proxy_http_version 1.1;
+			proxy_set_header Origin '';
+			proxy_set_header Upgrade $http_upgrade;
+			proxy_set_header Connection $connection_upgrade;
+			proxy_connect_timeout 1800; 
+			proxy_read_timeout 900; 
+			proxy_send_timeout 900; 
+		
 
 
-            #proxy_set_header   Host             $host; 
-            #proxy_set_header   X-Real-IP        $remote_addr; 
-            #proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
+			#proxy_set_header   Host             $host; 
+			#proxy_set_header   X-Real-IP        $remote_addr; 
+			#proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for; 
 
-        &#125;
-    &#125;	
+		&#125;
+	&#125;	
 &#125;
 
 
@@ -152,8 +159,8 @@ upstream websocket &#123;
     #    include        fastcgi_params;
     #&#125;
 
-    # deny access to .htaccess files, if Apache&#39;s document root
-    # concurs with nginx&#39;s one
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
     #
     #location ~ /\.ht &#123;
     #    deny  all;
@@ -194,6 +201,5 @@ upstream websocket &#123;
 #        root   html;
 #        index  index.html index.htm;
 #    &#125;
-#&#125;
-</code></pre>
+#&#125;</code></pre>
 </div><div class="article-licensing box"><div class="licensing-title"><p>NGINX搭建负载均衡</p><p><a href="https://wandana123.github.io/2024/06/05/NGINX搭建负载均衡/">https://wandana123.github.io/2024/06/05/NGINX搭建负载均衡/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>wandan</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2024-06-05</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2024-06-05</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">Like this article? Support the author with</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>Afdian.net</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/" alt="Alipay"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>Buy me a coffee</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/" alt="Wechat"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2024/06/13/WIN10-WIN11%E7%BB%84%E7%AD%96%E7%95%A5%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80%E7%9A%84%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">WIN10&amp;&amp;WIN11组策略无法打开的问题处理</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/"><span class="level-item">东方通（TongWeb）定时自动重启任务</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div>
