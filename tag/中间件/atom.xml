@@ -3,25 +3,126 @@
     <id>https://wandana123.github.io</id>
     <title>全栈技术 • Posts by &#34;中间件&#34; tag</title>
     <link href="https://wandana123.github.io" />
-    <updated>2024-05-08T09:34:56.000Z</updated>
-    <category term="WINDOWS" />
-    <category term="数据库" />
+    <updated>2024-08-11T11:40:37.000Z</updated>
     <category term="中间件" />
+    <category term="Linux" />
+    <category term="数据库" />
+    <category term="WINDOWS" />
+    <entry>
+        <id>https://wandana123.github.io/2024/08/11/linux-%E3%81%AE-tomcat8-Neither-the-JAVA-HOME-nor-the-JRE-HOME-environment-variable-is-defined/</id>
+        <title>linux の tomcat8 异常 Neither the JAVA_HOME nor the JRE_HOME environment variable is defined</title>
+        <link rel="alternate" href="https://wandana123.github.io/2024/08/11/linux-%E3%81%AE-tomcat8-Neither-the-JAVA-HOME-nor-the-JRE-HOME-environment-variable-is-defined/"/>
+        <content type="html">&lt;p&gt;问题描述：&lt;/p&gt;
+&lt;p&gt;近期接到一个项目，客户反馈无缘无故访问不到系统。经排查发现 tomcat 挂掉了，导致客户访问不到。但是排查 kill 日志发现没开相关记录。没办法，先做个定时任务重启看看吧。&lt;/p&gt;
+&lt;p&gt;解决方案：&lt;/p&gt;
+&lt;p&gt;1. 写重启脚本&lt;br&gt;
+ #!/bin/sh&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# func:自动监控tomcat脚本并且执行重启操作
+
+# 获取tomcat进程ID（其中[grep -w &#39;.....&#39;]中的.....需要替换为实际部署的tomcat文件夹名，如下）
+TomcatID=$(ps -ef |grep tomcat |grep -w &#39;/home/apache-tomcat-8.5.100&#39;|grep -v &#39;grep&#39;|awk &#39;&amp;#123;print $2&amp;#125;&#39;)
+# 获取同一个tomcat重复启动个数
+TomcatCount=$( ps -ef |grep tomcat |grep -w &#39;/home/apache-tomcat-8.5.100&#39;|grep -v &#39;grep&#39;|awk &#39;&amp;#123;print $2&amp;#125;&#39; |wc -l)
+
+# tomcat启动程序(这里注意tomcat实际安装的路径)
+StartTomcat=/home/apache-tomcat-8.5.100/bin/startup.sh
+# TomcatCache=/opt/tomcat/work
+
+#定义要监控的页面地址
+WebUrl=http://172.17.56.51:8080/DreamWeb
+
+#日志输出
+GetPageInfo=/home/tomcat_oip_back_visit.info
+TomcatMonitorLog=/home/tomcat_oip_back_monitor.log
+
+Monitor()
+&amp;#123;
+    echo &amp;quot;[info]开始监控tomcat...[$(date +&#39;%F %H:%M:%S&#39;)]&amp;quot;
+    if [[ $TomcatCount -gt 1 ]];then #这里判断Tomcat进程是否有重复启动，有重复启动则全部干掉
+      ps -ef |grep tomcat |grep -w &#39;/home/apache-tomcat-8.5.100&#39;|grep -v &#39;grep&#39;|awk &#39;&amp;#123;print $2&amp;#125;&#39; | xargs kill -9
+      echo &amp;quot;同一tomcat开启开启 $TomcatCount 个进程，统统kill掉&amp;quot;
+      sleep 5
+    else
+        if [ &amp;quot;$TomcatID&amp;quot; ];then #这里判断Tomcat进程是否存在
+                echo &amp;quot;[info]当前tomcat进程ID为:$TomcatID,继续检测页面...&amp;quot;
+                # 检测是否启动成功(成功的话页面会返回状态&amp;quot;200&amp;quot;),100秒无响应就不等待了
+                TomcatServiceCode=$(curl -s -o $GetPageInfo -m 100 --connect-timeout 100 $WebUrl -w %&amp;#123;http_code&amp;#125;)
+                if [ $TomcatServiceCode -eq 200 ];then
+                        echo &amp;quot;[info]页面返回码为$TomcatServiceCode，tomcat启动成功，测试页面正常&amp;quot;
+                else
+                        echo &amp;quot;[error]tomcat页面出错，请注意...状态码为$TomcatServiceCode，错误日志已输出到$GetPageInfo&amp;quot;
+                        echo &amp;quot;[error]页面访问出错，开始重启tomcat&amp;quot;
+                        kill -9 $TomcatID # 杀掉原tomcat进程
+                        # sleep 5
+                        # rm -rf $TomcatCache # 清理tomcat缓存
+                        $StartTomcat
+                fi
+        else
+                echo &amp;quot;[error]tomcat进程不存在!tomcat开始自动重启...&amp;quot;
+                echo &amp;quot;[info]$StartTomcat，请稍候...&amp;quot;
+                # rm -rf $TomcatCache
+                $StartTomcat
+        fi
+     fi
+    echo &amp;quot;--------------------------&amp;quot;
+&amp;#125;
+Monitor&amp;gt;&amp;gt;$TomcatMonitorLog
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;2. 将上述脚本存至 retomcat.sh 内。&lt;/p&gt;
+&lt;h1 id=&#34;注windows编辑完放到linux内无法运行可能会报各种异常-必须复制完在linux里通过touch创建retomcatsh并直接vi-retomcatsh进入文件内粘贴完直接改对应参数才可以正常执行&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#注windows编辑完放到linux内无法运行可能会报各种异常-必须复制完在linux里通过touch创建retomcatsh并直接vi-retomcatsh进入文件内粘贴完直接改对应参数才可以正常执行&#34;&gt;#&lt;/a&gt; 注：Windows 编辑完放到 Linux 内无法运行，可能会报各种异常。必须复制完，在 Linux 里通过 touch 创建 retomcat.sh 并直接 vi retomcat.sh 进入文件内，粘贴完直接改对应参数才可以正常执行。&lt;/h1&gt;
+&lt;p&gt;3. 进入 retomcat.sh 所在路径，执行如下命令：&lt;br&gt;
+chmod u+x &lt;a href=&#34;http://retomcat.sh&#34;&gt;retomcat.sh&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://4.xn--retomcat-1e8pl3hr70fmr4b.sh&#34;&gt;4. 直接执行 retomcat.sh&lt;/a&gt;，看看是否可正常重启 tomcat。&lt;br&gt;
+./retomcat&lt;br&gt;
+5. 如果正常能重启，那么进入 crontab，创建 crontab 任务。某些 Linux 可能 crontab 执行日志没做记录，按如下调试：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;sudo vim /etc/rsyslog.d/50-default.conf
+cron.*  /var/log/cron.log #将cron前面的注释符去掉
+#重启rsyslog
+sudo /etc/init.d/rsyslog restart
+sudo service rsyslog restart   #重启rsyslog
+sudo service crond restart   #重启crond。 在有的系统中，定时任务程序名称是crond
+
+# crontab -e 进入crontab编辑器
+crontab -e
+i
+# 设置每天凌晨2点执行一次
+0 2 * * * cd /home;./retomcat.sh
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;6. 就在这时候，问题来了，看 retomcat.sh 脚本执行日志发现报了，Neither the JAVA_HOME nor the JRE_HOME environment variable is defined 异常。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;#  解决方式就是在setclasspath.sh文件内加入如下内容：（Windows是setclasspath.bat,linux是setclasspath.sh）
+# -----------------------------------------------------------------------------
+#  Set JAVA_HOME or JRE_HOME if not already set, ensure any provided settings
+#  are valid and consistent with the selected start-up options and set up the
+#  endorsed directory.
+# -----------------------------------------------------------------------------
+# Linux写法：
+export JAVA_HOME=/home/jdk1.8.0_65
+# Windows写法：
+set JAVA_HOME=/home/jdk1.8.0_65
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这样它就完美运行了。&lt;/p&gt;
+</content>
+        <category term="中间件" />
+        <updated>2024-08-11T11:40:37.000Z</updated>
+    </entry>
     <entry>
         <id>https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/</id>
         <title>东方通（TongWeb）定时自动重启任务</title>
         <link rel="alternate" href="https://wandana123.github.io/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/"/>
-        <content type="html">&lt;p&gt;#首先执行&lt;code&gt;crontab -e&lt;/code&gt;进入定时任务内&lt;br&gt;#然后将下面的任务复制粘贴进去，wq!保存退出&lt;br&gt;#重启crontab任务即可&lt;/p&gt;
-&lt;p&gt;#每天早晨5:00停机&lt;/p&gt;
+        <content type="html">&lt;p&gt;#首先执行 &lt;code&gt;crontab -e&lt;/code&gt;  进入定时任务内&lt;br&gt;
+ #然后将下面的任务复制粘贴进去，wq! 保存退出&lt;br&gt;
+ #重启 crontab 任务即可&lt;/p&gt;
+&lt;p&gt;#每天早晨 5:00 停机&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;00 05 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天早晨5:04启动&lt;/p&gt;
+&lt;p&gt;#每天早晨 5:04 启动&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;04 05 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天中午13:00停机&lt;/p&gt;
+&lt;p&gt;#每天中午 13:00 停机&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;00 13 * * * cd /opt/TongWeb7.0/bin;./stopserver.sh
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;#每天中午13:04重启&lt;br&gt;    04 13 * * * cd &amp;#x2F;opt&amp;#x2F;TongWeb7.0&amp;#x2F;bin;.&amp;#x2F;startservernohup.sh&lt;/p&gt;
+&lt;p&gt;#每天中午 13:04 重启&lt;br&gt;
+ 04 13 * * * cd /opt/TongWeb7.0/bin;./startservernohup.sh&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/2024/05/08/%E4%B8%9C%E6%96%B9%E9%80%9A%EF%BC%88TongWeb%EF%BC%89%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%E4%BB%BB%E5%8A%A1/dingshirenwu.png&#34; alt=&#34;crontab格式说明&#34;&gt;&lt;/p&gt;
 &lt;p&gt;太高级了，简直简单的不要不要的！！！！！！！&lt;/p&gt;
 &lt;p&gt;又搞定了一个大事儿。&lt;/p&gt;

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>全栈技术 • Posts by &#34;linux&#34; tag</title>
+        <link>https://wandana123.github.io</link>
+        <description></description>
+        <language>en</language>
+        <pubDate>Sun, 11 Aug 2024 19:41:15 +0800</pubDate>
+        <lastBuildDate>Sun, 11 Aug 2024 19:41:15 +0800</lastBuildDate>
+        <category>中间件</category>
+        <category>Linux</category>
+        <category>数据库</category>
+        <category>WINDOWS</category>
+        <item>
+            <guid isPermalink="true">https://wandana123.github.io/2024/08/11/linux-%E3%81%AE-%E7%A1%AC%E7%9B%98%E6%89%A9%E5%AE%B9%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</guid>
+            <title>linux の 硬盘扩容相关问题</title>
+            <link>https://wandana123.github.io/2024/08/11/linux-%E3%81%AE-%E7%A1%AC%E7%9B%98%E6%89%A9%E5%AE%B9%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</link>
+            <category>Linux</category>
+            <pubDate>Sun, 11 Aug 2024 19:41:15 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;问题描述：&lt;/p&gt;
+&lt;p&gt;今天同事求助，说 Linux 服务器硬盘扩容完了，但是 df -h 看的时候还是没扩容的样子。扩容的空间没生效。&lt;br&gt;
+我也是丈二和尚摸不着头脑。&lt;br&gt;
+怎么肥四骚年？&lt;br&gt;
+你们干了个啥？&lt;/p&gt;
+&lt;p&gt;远控直接安排，过去 lsblk 一看，硬盘 2T 空间，已经挂载到 /data 路径里了。然后 df -h 一看，卧槽，什么情况？909G。&lt;br&gt;
+赶紧祭出 bing、百度一条龙。然后看到了如下 blog：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://blog.csdn.net/qq_41980405/article/details/128199507
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;简而言之就是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;df -h	# 看挂载盘的filesystem。例如我这边data的是/dev/vdb
+resize2fs /dev/vdb	# 那么直接执行这个命令就OK，不一会儿就更新完硬盘空间了。
+df -h	# 再执行data的空间就变成2T了
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;扩展阅读:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;resize2fs
+
+    调整ext2、3、4文件系统的大小，它可以放大或者缩小没有挂载的文件系统的大小。如果文件系统已经挂载，它可以扩大文件系统的大小，前提是内核支持在线调整大小。
+
+    size参数指定所请求的文件系统的新大小。如果没有指定任何单元，那么size参数的单位应该是文件系统的文件系统块大小。size参数可以由下列单位编号之一后缀：“s”、“K”、“M”或“G”，分别用于512字节扇区、千字节、兆字节或千兆字节。文件系统的大小可能永远不会大于分区的大小。如果未指定Size参数，则它将默认为分区的大小。
+
+    resize2fs程序不操作分区的大小。如果希望扩大文件系统，必须首先确保可以扩展基础分区的大小。如果您使用逻辑卷管理器LVM(8)，可以使用fdisk(8)删除分区并以更大的大小重新创建它，或者使用lvexport(8)。在重新创建分区时，请确保使用与以前相同的启动磁盘圆柱来创建分区！否则，调整大小操作肯定无法工作，您可能会丢失整个文件系统。运行fdisk(8)后，运行resize2fs来调整ext 2文件系统的大小，以使用新扩大的分区中的所有空间。
+
+    如果希望缩小ext2分区，请首先使用resize2fs缩小文件系统的大小。然后可以使用fdisk(8)缩小分区的大小。缩小分区大小时，请确保不使其小于ext2文件系统的新大小。
+
+    此命令的适用范围：RedHat、RHEL、Ubuntu、CentOS、SUSE、openSUSE、Fedora。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;转载自：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://blog.csdn.net/wj78080458/article/details/83851147&lt;/code&gt;&lt;/pre&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>
